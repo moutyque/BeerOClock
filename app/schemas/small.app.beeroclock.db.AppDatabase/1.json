@@ -1,0 +1,176 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "d23ae1bbb8f3aed2db5c4de0df7abc88",
+    "entities": [
+      {
+        "tableName": "Country",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`country_code` TEXT NOT NULL, `country_name` TEXT NOT NULL, PRIMARY KEY(`country_code`))",
+        "fields": [
+          {
+            "fieldPath": "country_code",
+            "columnName": "country_code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country_name",
+            "columnName": "country_name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "country_code"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Country_country_code",
+            "unique": false,
+            "columnNames": [
+              "country_code"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Country_country_code` ON `${TABLE_NAME}` (`country_code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Timezone",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zone_id` INTEGER NOT NULL, `abbreviation` TEXT NOT NULL, `time_start` REAL NOT NULL, `gmt_offset` INTEGER NOT NULL, `dst` INTEGER NOT NULL, PRIMARY KEY(`zone_id`, `time_start`))",
+        "fields": [
+          {
+            "fieldPath": "zone_id",
+            "columnName": "zone_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abbreviation",
+            "columnName": "abbreviation",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time_start",
+            "columnName": "time_start",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gmt_offset",
+            "columnName": "gmt_offset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dst",
+            "columnName": "dst",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "zone_id",
+            "time_start"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Timezone_zone_id_time_start",
+            "unique": false,
+            "columnNames": [
+              "zone_id",
+              "time_start"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Timezone_zone_id_time_start` ON `${TABLE_NAME}` (`zone_id`, `time_start`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Zone",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zone_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `country_code` TEXT NOT NULL, `zone_name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "zone_id",
+            "columnName": "zone_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country_code",
+            "columnName": "country_code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zone_name",
+            "columnName": "zone_name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "zone_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "City",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `country_code` TEXT NOT NULL, PRIMARY KEY(`name`, `lat`, `lng`))",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lat",
+            "columnName": "lat",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lng",
+            "columnName": "lng",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country_code",
+            "columnName": "country_code",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "name",
+            "lat",
+            "lng"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd23ae1bbb8f3aed2db5c4de0df7abc88')"
+    ]
+  }
+}
