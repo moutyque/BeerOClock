@@ -6,57 +6,49 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.zone.ZoneRulesException
 import java.util.*
-import kotlin.math.abs
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class Repository(context: Context) {
     val db = getInstance(context)
-
-    val tag = "Repository"
+    val validZones: MutableList<String> = ArrayList()
+    val validCities: MutableMap<City, String> = HashMap()
+    private val tag = "Repository"
     private val DATE_FORMAT = "dd-M-yyyy hh:mm:ss a"
 
     suspend fun getCities() {
 
 
-        //TODO : issue with the offset need to find a way to get the negative or positive
         withContext(Dispatchers.IO) {
 
-            val validZone: MutableList<String> = ArrayList<String>()
-            val validCountryCode: MutableCollection<String> = ArrayList<String>()
-            val validCountryName: MutableCollection<String> = ArrayList<String>()
 
-            val rightNow = Calendar.getInstance()
+            //TODO : Manage the availabelIds based on RAW offset + dst
+            val availableIDs = TimeZone.getAvailableIDs()
 
-            val currentHourIn24Format =
-                rightNow[Calendar.HOUR_OF_DAY] // return the hour in 24 hrs format (ranging from 0-23)
-            Log.d(tag, currentHourIn24Format.toString())
-            val offset =
-                abs(18 - currentHourIn24Format) * 3_600 + (TimeZone.getDefault().dstSavings / 1000)
-            Log.d(tag, "Offset : " + offset)
-            val zoneId = db.timezoneDAO().findZoneIdByOffset(offset)
-            zoneId.forEach {
-                Log.d(tag, "zoneId : " + it.toString())
-                val findZoneFromId = db.zoneDAO().findZoneFromId(it)
-                findZoneFromId.forEach {
-                    Log.d(tag, "findZoneFromId : " + it.toString())
-                    val hour = LocalDateTime.now(ZoneId.of(it.zone_name)).hour
+            availableIDs.forEach {
+                Log.d(tag, "findZoneFromId : " + it.toString())
+                //Some time zone are present in TimeZone but not usable by LocalDateTime class
+                try {
+                    val hour = LocalDateTime.now(ZoneId.of(it)).hour
                     if (hour == 18) {
-                        validZone.add(it.zone_name)
+                        validZones.add(it)
                     }
+                } catch (e: ZoneRulesException) {
+
                 }
-            }
-            validZone.forEach {
-                validCountryCode.addAll(db.timezoneDAO().findCountryCodeInZone(it))
+
+
             }
 
-            validCountryCode.forEach {
-                validCountryName.add(db.countryDAO().findNameFromCode(it))
-            }
 
-            //TODO : add city search
-            validCountryName.forEach {
-                Log.d(tag, it)
+            //TODO : Find the city in each time zone, do not relly on country cause some like Russia have multiple time zone
+            validZones.forEach {
+                db.cityDAO().findCityInZone(it).forEach {
+                    validCities.put(it, db.countryDAO().findCountryName(it.county_code))
+                }
             }
 
 

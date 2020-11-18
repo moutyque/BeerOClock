@@ -1,10 +1,12 @@
 package small.app.beeroclock
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_main.*
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +23,7 @@ class MainFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,6 +38,14 @@ class MainFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val validCities = (getActivity() as MainActivity).repo.validCities
+        val random = Random()
+        val elementAt = validCities.entries.elementAt(random.nextInt(validCities.size))
+        tvCity.setText("${elementAt.key.name} :  ${elementAt.value}")
     }
 
     companion object {

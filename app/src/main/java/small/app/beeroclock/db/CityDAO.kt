@@ -5,8 +5,8 @@ import androidx.room.*
 @Dao
 interface CityDAO {
 
-    @Query("SELECT * FROM City WHERE country_code=:code")
-    fun findCityInCountry(code: String): List<City>
+    @Query("SELECT * FROM City WHERE time_zone=:code")
+    fun findCityInZone(code: String): List<City>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCity(vararg city: City)

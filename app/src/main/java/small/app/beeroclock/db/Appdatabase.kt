@@ -7,18 +7,16 @@ import androidx.room.RoomDatabase
 
 
 @Database(
-    entities = arrayOf(Country::class, Timezone::class, Zone::class, City::class),
+    entities = arrayOf(City::class, Country::class),
     version = 1,
     exportSchema = true
 )
 
 
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun countryDAO(): CountryDAO
-    abstract fun timezoneDAO(): TimezoneDAO
-    abstract fun zoneDAO(): ZoneDAO
-    abstract fun cityDAO(): CityDAO
 
+    abstract fun cityDAO(): CityDAO
+    abstract fun countryDAO(): CountryDAO
 }
 
 lateinit var _context: Context
@@ -36,10 +34,9 @@ fun getInstance(context: Context): AppDatabase {
             ).createFromAsset("beeroclock.db")
                 .fallbackToDestructiveMigration()
                 .build()
-            //.addCallback(rdc)
 
         }
-        return INSTANCE;
+        return INSTANCE
     }
 }
 

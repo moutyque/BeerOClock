@@ -9,10 +9,14 @@ data class City(
     @NotNull
     val name: String,
     @NotNull
+    val name_ascii: String,
+    @NotNull
     val lat: Double,
     @NotNull
     val lng: Double,
     @NotNull
-    val country_code: String
+    val time_zone: String,
+    @NotNull
+    val county_code: String
 ) {
 }
