@@ -29,7 +29,6 @@ class Repository(context: Context) {
             val availableIDs = TimeZone.getAvailableIDs()
 
             availableIDs.forEach {
-                Log.d(tag, "findZoneFromId : " + it.toString())
                 //Some time zone are present in TimeZone but not usable by LocalDateTime class
                 try {
                     val hour = LocalDateTime.now(ZoneId.of(it)).hour
@@ -42,7 +41,9 @@ class Repository(context: Context) {
 
 
             }
-
+            validZones.forEach {
+                Log.d(tag, "validZones : ${it.toString()}")
+            }
 
             //TODO : Find the city in each time zone, do not relly on country cause some like Russia have multiple time zone
             validZones.forEach {
@@ -51,6 +52,9 @@ class Repository(context: Context) {
                 }
             }
 
+            validCities.forEach {
+                Log.d(tag, "validCities: ${it.toString()}")
+            }
 
         }
 

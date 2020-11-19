@@ -19,10 +19,15 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MainFragment : Fragment() {
+
+    //TODO : Add time listener : https://stackoverflow.com/questions/5481386/date-and-time-change-listener-in-android
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
+
+    val random = Random()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +41,30 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        button.setOnClickListener {
+            resetCity()
+        }
+    }
+
+    private fun resetCity() {
         val validCities = (getActivity() as MainActivity).repo.validCities
-        val random = Random()
         val elementAt = validCities.entries.elementAt(random.nextInt(validCities.size))
         tvCity.setText("${elementAt.key.name} :  ${elementAt.value}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        resetCity()
     }
 
     companion object {
