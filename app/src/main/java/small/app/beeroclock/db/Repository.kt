@@ -4,8 +4,6 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.zone.ZoneRulesException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -17,45 +15,33 @@ class Repository(context: Context) {
     val validZones: MutableList<String> = ArrayList()
     val validCities: MutableMap<City, String> = HashMap()
     private val tag = "Repository"
-    private val DATE_FORMAT = "dd-M-yyyy hh:mm:ss a"
-
+    private val availableIDs = TimeZone.getAvailableIDs()
+    var currentTime = -1
     suspend fun getCities() {
 
 
         withContext(Dispatchers.IO) {
+            if (currentTime != Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+                currentTime = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                //TODO : Manage the availabelIds based on RAW offset + dst
+
+                availableIDs.forEach {
+                    //Some time zone are present in TimeZone but not usable by LocalDateTime class
+                    try {
 
 
-            //TODO : Manage the availabelIds based on RAW offset + dst
-            val availableIDs = TimeZone.getAvailableIDs()
-
-            availableIDs.forEach {
-                //Some time zone are present in TimeZone but not usable by LocalDateTime class
-                try {
-                    val hour = LocalDateTime.now(ZoneId.of(it)).hour
-                    if (hour == 18) {
-                        validZones.add(it)
+                        val hour = Calendar.getInstance(TimeZone.getTimeZone(it))
+                            .get(Calendar.HOUR_OF_DAY)
+                        if (hour == 18) {
+                            db.cityDAO().findCityInZone(it).forEach {
+                                validCities.put(it, db.countryDAO().findCountryName(it.county_code))
+                            }
+                        }
+                    } catch (e: ZoneRulesException) {
+                        Log.e(tag, "The time zone $it do not exist")
                     }
-                } catch (e: ZoneRulesException) {
-
-                }
-
-
-            }
-            validZones.forEach {
-                Log.d(tag, "validZones : ${it.toString()}")
-            }
-
-            //TODO : Find the city in each time zone, do not relly on country cause some like Russia have multiple time zone
-            validZones.forEach {
-                db.cityDAO().findCityInZone(it).forEach {
-                    validCities.put(it, db.countryDAO().findCountryName(it.county_code))
                 }
             }
-
-            validCities.forEach {
-                Log.d(tag, "validCities: ${it.toString()}")
-            }
-
         }
 
 

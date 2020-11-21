@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "small.app.beeroclock"
-        minSdkVersion 26
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -26,6 +26,12 @@ android {
                 arg("room.schemaLocation", "$projectDir/schemas")
             }
         }
+        buildFeatures {
+            dataBinding true
+        }
+//        dataBinding {
+//            enabled true
+//        }
     }
 
     buildTypes {
@@ -64,6 +70,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    kapt 'com.android.databinding:compiler:3.1.4'
 
     def room_version = "2.2.5"
 
