@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import small.app.beeroclock.getLocalHour
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.math.abs
 
 
 class Repository(context: Context) {
@@ -21,14 +21,7 @@ class Repository(context: Context) {
             availableIDs.forEach {
                 //Some time zone are present in TimeZone but not usable by LocalDateTime class
                 try {
-
-                    val instance = Calendar.getInstance(TimeZone.getTimeZone(it))
-                    val dst =
-                        instance.get(Calendar.DST_OFFSET)
-                    val offset =
-                        instance.get(Calendar.ZONE_OFFSET) / abs(instance.get(Calendar.ZONE_OFFSET))
-                    val hour = instance.get(Calendar.HOUR_OF_DAY)
-                    if ((hour + offset * dst) == 18) {
+                    if (getLocalHour(it) == 18) {
                         db.cityDAO().findCityInZone(it).forEach {
                             validCities.put(it, db.countryDAO().findCountryName(it.county_code))
                         }

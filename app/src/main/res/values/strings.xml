@@ -2,4 +2,9 @@
     <string name="app_name">BeerOClock</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">It\'s beer o\'clock</string>
+    <string name="subTitle">It is always the right time for a beer somewhere.</string>
+    <string name="message">Time for a beer in :</string>
+    <string name="button">Refresh</string>
+    <string name="image_description">Drawing of a glass of beer</string>
 </resources>
