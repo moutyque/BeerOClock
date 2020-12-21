@@ -82,7 +82,7 @@ dependencies {
 
     kapt 'com.android.databinding:compiler:3.1.4'
 
-    def room_version = "2.2.5"
+    def room_version = "2.2.6"
 
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -92,4 +92,8 @@ dependencies {
 
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
+
+    //Add map support
+    implementation 'org.osmdroid:osmdroid-android:6.1.8'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
 }

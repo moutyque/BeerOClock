@@ -11,10 +11,16 @@ import kotlin.concurrent.timerTask
 class Model(context: Context) : ViewModel() {
 
     var text: MutableLiveData<String> = MutableLiveData()
+
+    var lat: MutableLiveData<Double> = MutableLiveData()
+    var long: MutableLiveData<Double> = MutableLiveData()
+
     var repo: Repository = Repository(context)
     val timer = Timer()
 
     init {
+        lat.value = 0.0
+        long.value = 0.0
         runBlocking {
             repo.getCities()
         }
@@ -40,6 +46,9 @@ class Model(context: Context) : ViewModel() {
         val validCities = repo.validCities
         val elementAt = validCities.entries.elementAt(Random().nextInt(validCities.size))
         text.value = "${elementAt.key.name_ascii} : ${elementAt.value}"
+        lat.value = elementAt.key.lat
+        long.value = elementAt.key.lng
+
     }
 
 }
